@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='analyticsApp'>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/stylesheet.css">
+
+
+	<script type="text/javascript" src="lib/angular.js"></script>
+	<script type="text/javascript" src="lib/angular-resource.js"></script>
+	<script type='text/javascript' src='lib/d3.min.js'></script>
+	<script type='text/javascript' src='lib/angular-charts.min.js'></script>
+
+
+	<!-- Angular App requirements -->
+	<script type="text/javascript" src="js/filters/filters.js"></script>
+
+	<script type="text/javascript" src="js/app.js"></script>
+
+	<!--<script type='text/javascript' src='js/services/UserFactory.js'></script>
+	<script type='text/javascript' src='js/services/LikeFactory.js'></script>
+	<script type='text/javascript' src='js/services/MessageFactory.js'></script>
+	<script type='text/javascript' src='js/services/UsageFactory.js'></script> -->
+
+	<script type='text/javascript' src='js/controllers/viewController.js'></script>
+	<script type='text/javascript' src='js/controllers/globalController.js'></script>
+	<script type='text/javascript' src='js/controllers/userController.js'></script>
+</head>
+<!-- <body ng-controller='DataController'> -->
+<body ng-controller='ViewController'>
+
+
+	<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+  <li class="active" ng-click="showGlobal()" ><a href="#home" role="tab" data-toggle="tab">Global</a></li>
+  <li ng-click='showIndividual()'><a href="#profile" role="tab" data-toggle="tab">Individual</a></li>
+</ul>
+
+	<!-- Tab panes -->
+
+<div class="tab-content">
+	  <div class="tab-pane fade" id="profile" ng-controller='UserController' ng-if='individualTab'>
+  <!-- <div class="tab-pane fade in active" id="home" ng-controller='UserController'> -->
+  	<input type='text' class='userInput' ng-model='specifiedUser'><button class"btn btn-success" ng-click='getUser(specifiedUser)'>Search User</button>
+<h3>Registration Date: <p class="answer">{{user.created | date}}</p></h3>  
+<h3>Last Login: <p class="answer">Data Unavailable</p></h3>
+<h3>Lifetime Swipes: <p class="answer">{{userData.swipes}}</p> </h3>
+<h3>Lifetime Matches: <p class="answer">{{userData.matches}}</p></h3>
+<h3>Lifetime "yes" swipes: <p class="answer">{{userData.likes}}</p></h3>
+<h3>Lifetime "no" swipes: <p class="answer">{{userData.swipes - userData.likes}}</p></h3>
+<h3>Swipes/Session: <p class="answer">Data Unavailable<p></h3>
+<h3>Messages Sent: <p class="answer">{{userData.messagesSent}}</p></h3>
+<h3>Conversations: <p class="answer">{{userData.conversations}}</p></h3>
+<h3>Messages Sent/Conversation: <p class="answer"> {{userData.messagesSent/userData.conversations | number:2}} </p></h3>
+<h3>Last Like: <p class="answer">{{userData.lastLike | date}}</p></h3>
+<h3>Last Match: <p class="answer"> {{userData.lastMatch | date}}</p></h3>
+<h3>Last Message: <p class="answer"> {{userData.lastMessage | date}}</p></h3>
+<h3>Average Session Length: <p class="answer"> Data Unavailable </p> </h3>
+<h3>Sessions/Day: <p class="answer"> Data Unavailable </p> </h3>
+<h3>Tags: <h3>
+<h4 class="answer" ng-repeat="tag in user.tags">{{tag}}</h4> 
+
+<div class="chart" ac-chart="chartType" ac-data="messagesChart" ac-config="chartConfig" style="height:300px;width:500px" ></div>
+<div class="chart" ac-chart='chartType' ac-data='swipesChart' ac-config="chartConfig" ></div>
+
+  </div> <!--Tab 1-->
+
+
+  <!-- <div class="tab-pane fade" id="profile" ng-controller='GlobalController'> -->
+   <div class="tab-pane fade in active" id="home" ng-controller='GlobalController' ng-if='globalTab'>
+  	<h2>Total Users: <p class="answer">{{users}}</p></h2>
+  	<h2>Completed Profiles:  <p class='answer'>{{completedProfiles}} ( {{100*completedProfiles/users | number:1}}%)</p></h2>
+  	<!-- <h2>Avg Matches / User: <p class="answer">{{totalMatches/users.length | number:2}}</p></h2> -->
+	<h2>Total Swipes: <p class="answer">{{totalSwipes}}</p></h2>
+	<h2>Likes: <p class="answer">{{totalLikes}}</p></h2>
+	<h2>Matches: <p class="answer">{{totalMatches}}</p></h2>
+	<h2>Likes per Match: <p class="answer">{{totalLikes/totalMatches | number:2}}</p></h2>
+	<!-- <h2>Avg Conversation Length: <p class="answer">{{averageMessages/users.length | number:2}}</p></h2> -->
+	<!-- <h2># of Shares: <p class="answer">Data Unavailable</p></h2>  -->
+	<!-- <h3>Average Age: <p class="answer">Data Unavailable</p></h3> -->
+
+
+<ul class="nav nav-tabs" role="tablist">
+  <li class="active" ng-click="graphUsage()" ><a href="#home" role="tab" data-toggle="tab">Usage</a></li>
+  <li ng-click='graphMessagesUsage()'><a href="#profile" role="tab" data-toggle="tab">Messages Usage</a></li>
+  <li ng-click='graphLikesUsage()'><a href="#profile" role="tab" data-toggle="tab">Likes Usage</a></li>
+  <li ng-click='graphMessages()'><a href="#profile" role="tab" data-toggle="tab">Messages</a></li>
+  <li ng-click='graphLikes()'><a href="#profile" role="tab" data-toggle="tab">Likes</a></li>
+  <li ng-click='graphNewUsers()'><a href="#profile" role="tab" data-toggle="tab">New Users</a></li>
+  <li ng-click='graphTotalUsers()'><a href="#profile" role="tab" data-toggle="tab">Total Users</a></li>
+  <li ng-click='graphCategory()'><a href="#profile" role="tab" data-toggle="tab">User Categories</a></li>
+  <li ng-click='graphLocation()'><a href="#profile" role="tab" data-toggle="tab">Location</a></li>
+  <li ng-click='graphMatches()'><a href="#profile" role="tab" data-toggle="tab">Matches</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane fade in active" id="home">
+
+ 	<div class="chart" ac-chart="chartType" ac-data='activeChart' ac-config="activeChartConfig" ></div>
+
+</div> <!--ChartTab1--> 
+</div> <!--end ChartTabContent-->
+  </div> <!--Tab 2-->
+
+</div> 
+
+<!-- Load all JS after this point-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="lib/bootstrap.min.js"></script>
+<script type="text/javascript">
+	
+	$('#myTab a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+
+
+$('#myTab a[href="#profile"]').tab('show') // Select tab by name
+$('#myTab a:first').tab('show') // Select first tab
+$('#myTab a:last').tab('show') // Select last tab
+$('#myTab li:eq(2) a').tab('show') // Select third tab (0-indexed)
+
+</script>
+</body>
+</html>
