@@ -1,0 +1,25 @@
+* {
+	padding: 5px 5px 0px 5px;
+}
+
+p.answer {
+	position: absolute;
+	color: rgb(172, 213, 160);
+	display: inline;
+	left: 35%;
+	padding: 0px;
+}
+
+.chart{
+	height:400px;
+	width:2250px;
+}
+
+#chartChart{
+	height:300px;
+	width:500px;
+}
+
+.userInput{
+	width: 300px;
+}
